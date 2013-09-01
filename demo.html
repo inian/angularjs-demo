@@ -4,9 +4,231 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
 		<link rel="stylesheet" href="demo.css">
 	</head>
-	<body>
+	<body ng-controller="bookCtrl">
 		<h1>Library</h1>
 
-		
+		<table border=1>
+			<tr>
+				<th>Title</th>
+				<th>Author</th>
+				<th>Price</th>
+				<th>Delete Button</th>
+				<th>Edit Button</th>
+			</tr>
+			<tr ng-repeat="book in books">
+				<td>
+					<div id="title-{{book.id}}">
+						{{getBookTitle(book.id)}}
+					</div>
+				</td>
+				<td>
+					<div id="author-{{book.id}}">
+						{{getBookAuthor(book.id)}}
+					</div>
+				</td>
+				<td>
+					<div id="price-{{book.id}}">
+						{{getBookPrice(book.id)}}
+					</div>
+				</td>
+				<td>
+					<form ng-submit="deleteBook({{book.id}})">
+						<input class="btn-delete" type="submit" value="Delete">
+					</form>
+				</td>
+				<td>
+					<form ng-submit=getEditButtonFunction({{book.id}})>
+						<input class="btn-edit" type="submit" value={{book.editButtonValue}}>
+					</form>
+				</td>
+			</tr>
+		</table>
+
+		<form ng-submit="addBook()">
+       		<input type="text" id="add-title" size="30"
+				placeholder="add new title here">
+			<br/>
+			<input type="text" id="add-author"  size="30"
+				placeholder="add corresponding author here">
+			<br/>
+			<input type="text" id="add-price"  size="30"
+				placeholder="add corresponding price here">
+			<br/>
+        	<input class="btn-add" type="submit" value="Add">
+     	</form>
+
+     	<script>
+     		function bookCtrl($scope){
+     			var bookIdCounter = 1;
+
+     			$scope.books = [
+					{id:0, title:"Sword Art Online", author:"Reki Kawahara", price:"$11.44", editButtonValue:"Edit", editingMode:false}
+				]
+
+				$scope.getBookTitle = function(bookId){
+					var i;
+
+					for(i = 0; i < $scope.books.length; i++){
+						var book = $scope.books[i];
+
+						if(book.id != bookId) continue;
+						if(!book.editingMode){
+							try{
+								document.getElementById("title-" + book.id).innerText = book.title;
+							} catch(err){
+								return book.title;
+							}
+						}
+						else{
+							var element = document.createElement("input");
+							element.setAttribute("type", "text");
+							element.setAttribute("value", "");
+							element.setAttribute("id", "edit-title-"+book.id);
+							element.setAttribute("style", "width:200px");
+
+							document.getElementById("title-" + book.id).innerText = "";
+							document.getElementById("title-" + book.id).appendChild(element);
+						}
+
+						break;
+					}
+				}
+
+				$scope.getBookAuthor = function(bookId){
+					var i;
+
+					for(i = 0; i < $scope.books.length; i++){
+						var book = $scope.books[i];
+
+						if(book.id != bookId) continue;
+						if(!book.editingMode){
+							try{
+								document.getElementById("author-" + book.id).innerText = book.author;
+							} catch(err){
+								return book.author;
+							}
+						}
+						else{
+							var element = document.createElement("input");
+							element.setAttribute("type", "text");
+							element.setAttribute("value", "");
+							element.setAttribute("id", "edit-author-"+book.id);
+							element.setAttribute("style", "width:200px");
+
+							document.getElementById("author-" + book.id).innerText = "";
+							document.getElementById("author-" + book.id).appendChild(element);
+						}
+
+						break;
+					}
+				}
+
+				$scope.getBookPrice = function(bookId){
+					var i;
+
+					for(i = 0; i < $scope.books.length; i++){
+						var book = $scope.books[i];
+
+						if(book.id != bookId) continue;
+						if(!book.editingMode){
+							try{
+								document.getElementById("price-" + book.id).innerText = book.price;
+							} catch(err){
+								return book.price;
+							}
+						}
+						else{
+							var element = document.createElement("input");
+							element.setAttribute("type", "text");
+							element.setAttribute("value", "");
+							element.setAttribute("id", "edit-price-"+book.id);
+							element.setAttribute("style", "width:200px");
+
+							document.getElementById("price-" + book.id).innerText = "";
+							document.getElementById("price-" + book.id).appendChild(element);
+						}
+
+						break;
+					}
+				}
+
+				$scope.getEditButtonFunction = function(bookId){
+					var i;
+
+					for(i = 0; i < $scope.books.length; i++){
+						var book = $scope.books[i];
+
+						if(book.id != bookId) continue;
+						if(!book.editingMode){
+							$scope.editingModeBook(bookId);
+						}
+						else $scope.editBook(bookId);
+
+						break;
+					}
+				}
+
+				$scope.editingModeBook = function(bookId){
+					var i;
+
+					for(i = 0; i < $scope.books.length; i++){
+						var book = $scope.books[i];
+
+						if(book.id != bookId) continue;
+						book.editingMode = true;
+						book.editButtonValue = "Submit";
+
+						break;
+					}
+				}
+
+				$scope.editBook = function(bookId){
+					var i;
+
+					for(i = 0; i < $scope.books.length; i++){
+						var book = $scope.books[i];
+
+						if(book.id != bookId) continue;
+
+						book.title = document.getElementById("edit-title-" + book.id).value;
+						book.author = document.getElementById("edit-author-" + book.id).value;
+						book.price = document.getElementById("edit-price-" + book.id).value;
+
+						book.editingMode = false;
+						book.editButtonValue = "Edit";
+
+						break;
+					}
+				}
+
+				$scope.addBook = function(){
+					var newBook = {};
+
+					newBook.id = bookIdCounter;
+					bookIdCounter++;
+					newBook.title = document.getElementById("add-title").value;
+					newBook.author = document.getElementById("add-author").value;
+					newBook.price = document.getElementById("add-price").value;
+					newBook.editingMode = false;
+					newBook.editButtonValue = "Edit";
+
+					$scope.books.push(newBook);
+				}
+
+				$scope.deleteBook = function(bookId){
+					var i;
+
+					for(i = 0; i < $scope.books.length; i++){
+						var book = $scope.books[i];
+
+						if(book.id != bookId) continue;
+						delete $scope.books[i];
+						$scope.books.length--;
+
+						break;
+					}
+				}
+     		}
+     	</script>
 	</body>
 </html>
