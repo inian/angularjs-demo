@@ -2,7 +2,7 @@
 
 function connect_db() {
     $database = "angulardemo";
-    $connect = mysql_connect('localhost', 'root', 'bitnami');
+    $connect = mysql_connect('localhost', 'root', '');
     if (!$connect) {
         echo 'mur';
         die(mysql_error());
