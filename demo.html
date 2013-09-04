@@ -1,14 +1,15 @@
 <!doctype html>
 <html ng-app="moduleName">
 	<head>
-		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.js"></script>
+		<script src="scripts/angular.js"></script>
 		<script src="scripts/BooksController.js"></script>
 		<script src="scripts/app.js"></script>
 		<script src="scripts/factory.js"></script>
-		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular-resource.js"></script>
+		<script src="scripts/angular-resource.js"></script>
 		<link rel="stylesheet" href="demo.css">
 	</head>
-	<body ng-controller="bookCtrl">
+	<body ng-controller="BooksController">
+	<!--{{books}} -->
 		<h1>Library</h1>
 
 		<table border=1>
@@ -42,7 +43,7 @@
 				</td>
 				<td>
 					<form ng-submit=getEditButtonFunction({{book.id}})>
-						<input class="btn-edit" type="submit" value={{book.editButtonValue}}>
+						<input class="btn-edit" type="submit" value="Edit">
 					</form>
 				</td>
 			</tr>
@@ -74,9 +75,9 @@
 
 					for(i = 0; i < $scope.books.length; i++){
 						var book = $scope.books[i];
-
 						if(book.id != bookId) continue;
 						if(!book.editingMode){
+							
 							try{
 								document.getElementById("title-" + book.id).innerText = book.title;
 							} catch(err){
@@ -237,7 +238,6 @@
 		<div ng-view>
 		</div>
 		<div ng-controller="BooksController">
-			{{books}}
 		</div>
 		
 	</body>

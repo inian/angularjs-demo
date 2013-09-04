@@ -4,9 +4,9 @@
 	connect_db();
 	$type = $_SERVER["REQUEST_METHOD"];
 	if($type == "GET") {
+	if(isset($_GET["id"])) 
 		$id = $_GET["id"];
-		echo $id;
-		if($id) {
+		if(isset($id)) {
 			//stub
 		} else {
 			//return all the books
@@ -21,6 +21,8 @@
 				$book->setPrice($row['price']);
 				$book->setAuthor($row['author']);
 				$book->setId($row['id']);
+				//$book->setEditingMode($row['editingMode']);
+				//$book->setEditButtonValue($row['editButtonValue']);
 				$result[] = $book->getBook();
 			}
 			echo json_encode($result);
@@ -31,13 +33,14 @@
 		$name = $data->name;
 		$author = $data->author;
 		$price = $data->price;
+		$editingMode = $data->editingMode;
+		$editButtonValue = $data->editButtonValue;
 		$query = mysql_query("INSERT into books (name, author, price) values ('$name', '$author', '$price')");
 		if(!$query) {
 			die(mysql_error());
 		}
 	} else if($type == "DELETE") {
-		$tokens = explode("/", $_SERVER["REQUEST_URI"]);
-		$name = $tokens[sizeof($tokens) - 1];
+		$name = $_GET['name'];
 		echo $name;
 		$query = mysql_query("DELETE from books where name = '$name'");
 		if(!$query) {
